@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  snowflake-mcp:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # Snowflake connection
+      SNOWFLAKE_ACCOUNT: ${SNOWFLAKE_ACCOUNT}
+      SNOWFLAKE_USER: ${SNOWFLAKE_USER}
+      SNOWFLAKE_PASSWORD: ${SNOWFLAKE_PASSWORD}
+      SNOWFLAKE_DATABASE: ${SNOWFLAKE_DATABASE}
+      SNOWFLAKE_WAREHOUSE: ${SNOWFLAKE_WAREHOUSE}
+      SNOWFLAKE_SCHEMA: ${SNOWFLAKE_SCHEMA:-PUBLIC}
+      SNOWFLAKE_ROLE: ${SNOWFLAKE_ROLE:-}
+
+      # Comma-separated list of API keys for your team
+      # Generate with: openssl rand -hex 32
+      MCP_API_KEYS: ${MCP_API_KEYS}
+
+      PORT: 3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

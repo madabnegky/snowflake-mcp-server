@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: snowflake-mcp
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter           # $7/mo — upgrade to standard for production
+    healthCheckPath: /health
+    envVars:
+      - key: SNOWFLAKE_ACCOUNT
+        sync: false
+      - key: SNOWFLAKE_USER
+        sync: false
+      - key: SNOWFLAKE_PASSWORD
+        sync: false
+      - key: SNOWFLAKE_DATABASE
+        sync: false
+      - key: SNOWFLAKE_WAREHOUSE
+        sync: false
+      - key: SNOWFLAKE_SCHEMA
+        value: PUBLIC
+      - key: SNOWFLAKE_ROLE
+        sync: false
+      - key: MCP_API_KEYS
+        sync: false
+      - key: PORT
+        value: "3000"
