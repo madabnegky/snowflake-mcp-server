@@ -22,6 +22,14 @@ const TOOLS = [
     },
   },
   {
+    name: "list_databases",
+    description: "List all client databases available in this Snowflake account. Use this first to discover which databases exist before querying across them.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+    },
+  },
+  {
     name: "list_tables",
     description: "List all tables in a Snowflake schema. Use this to explore what data is available.",
     inputSchema: {
@@ -106,6 +114,10 @@ async function callTool(sf: SnowflakeClient, name: string, args: any): Promise<s
         const finalSql = /LIMIT\s+\d+/i.test(sql) ? sql : `${sql} LIMIT ${maxLimit}`;
         const rows = await sf.query(finalSql);
         return JSON.stringify({ row_count: rows.length, rows });
+      }
+      case "list_databases": {
+        const rows = await sf.listDatabases();
+        return JSON.stringify({ databases: rows.map((r: any) => r.name) });
       }
       case "list_tables": {
         const rows = await sf.listTables(args.schema, args.database);
